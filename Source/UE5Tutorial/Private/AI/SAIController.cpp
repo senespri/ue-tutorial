@@ -11,7 +11,11 @@ void ASAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	RunBehaviorTree(BehaviorTree);
+	if (ensureMsgf(BehaviorTree, TEXT("Behavior Tree is nullptr! Please assign Behavior Tree in your AI Controller")))
+	{
+		RunBehaviorTree(BehaviorTree);
+	}
+	/*
 	if (BehaviorTree == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Missing behaviour tree"));
@@ -29,5 +33,5 @@ void ASAIController::BeginPlay()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Missing blackboard"));
 		}
-	}
+	}*/
 }
