@@ -16,7 +16,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	float TargetPitch;
 
-	void Interact_Implementation(APawn* InstigatorPawn);
+	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 	
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -25,13 +25,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* LidMesh;
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+public:
 	// Sets default values for this actor's properties
 	ASItemChest();
 };
