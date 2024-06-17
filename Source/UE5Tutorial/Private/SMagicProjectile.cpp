@@ -4,6 +4,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Logging/StructuredLog.h"
 
 ASMagicProjectile::ASMagicProjectile()
 {
@@ -37,8 +38,8 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 		USAttributeComponent* AttributeComp = OtherActor->GetComponentByClass<USAttributeComponent>();
 		if (AttributeComp)
 		{
-			AttributeComp->ApplyHealthChange(-Damage);
-
+			AttributeComp->ApplyHealthChange(GetInstigator(), -Damage);
+			UE_LOG(LogTemp, Log, TEXT("Destroy"));
 			Destroy();
 		}
 	}
