@@ -43,6 +43,11 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
+	bool Kill(AActor* InstigatorActor);
+
+	float GetHealthMax() const;
+
+	UFUNCTION(BlueprintCallable)
 	bool IsAlive() const;
 
 	UPROPERTY(BlueprintAssignable)

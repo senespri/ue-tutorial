@@ -18,5 +18,11 @@ class UE5TUTORIAL_API USBTTask_RangedAttack : public UBTTaskNode
 
 protected:
 	UPROPERTY(EditAnywhere, Category="AI")
+	float MaxBulletSpread;
+
+	UPROPERTY(EditAnywhere, Category="AI")
 	UClass* ProjectileClass;
+
+public:
+	USBTTask_RangedAttack();
 };
