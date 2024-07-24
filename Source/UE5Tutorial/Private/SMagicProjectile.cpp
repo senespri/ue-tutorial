@@ -1,6 +1,7 @@
 ﻿#include "SMagicProjectile.h"
 
 #include "SAttributeComponent.h"
+#include "SGameplayFunctionLibrary.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -17,6 +18,7 @@ ASMagicProjectile::ASMagicProjectile()
 	SphereComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	*/
 	SphereComp->SetCollisionProfileName("Projectile");
+	SphereComp->SetSphereRadius(20.0f);
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ASMagicProjectile::OnActorOverlap);
 	RootComponent = SphereComp;
 
@@ -27,6 +29,8 @@ ASMagicProjectile::ASMagicProjectile()
 	MovementComp->InitialSpeed = 1000.0f;
 	MovementComp->bRotationFollowsVelocity = true;
 	MovementComp->bInitialVelocityInLocalSpace = true;
+
+	Damage = 20.0f;
 }
 
 void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -34,12 +38,18 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if (OtherActor && OtherActor != GetInstigator())
 	{
+		/*
 		//USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
 		USAttributeComponent* AttributeComp = OtherActor->GetComponentByClass<USAttributeComponent>();
 		if (AttributeComp)
 		{
 			AttributeComp->ApplyHealthChange(GetInstigator(), -Damage);
 			UE_LOG(LogTemp, Log, TEXT("Destroy"));
+			Destroy();
+		}*/
+
+		if (USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, Damage, SweepResult))
+		{
 			Destroy();
 		}
 	}
