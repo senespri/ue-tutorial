@@ -9,6 +9,8 @@
 #include "Perception/PawnSensingComponent.h"
 #include "SAICharacter.generated.h"
 
+class USActionComponent;
+
 UCLASS()
 class UE5TUTORIAL_API ASAICharacter : public ACharacter
 {
@@ -35,6 +37,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	USAttributeComponent* AttributeComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	USActionComponent* ActionComp;
 
 	UFUNCTION()
 	void OnPawnSeen(APawn* Pawn);

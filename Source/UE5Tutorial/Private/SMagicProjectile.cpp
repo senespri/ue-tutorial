@@ -1,5 +1,6 @@
 ﻿#include "SMagicProjectile.h"
 
+#include "SActionComponent.h"
 #include "SAttributeComponent.h"
 #include "SGameplayFunctionLibrary.h"
 #include "Components/SphereComponent.h"
@@ -7,28 +8,11 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Logging/StructuredLog.h"
 
+
 ASMagicProjectile::ASMagicProjectile()
 {
-	PrimaryActorTick.bCanEverTick = true;
-
-	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
-	/*
-	 *SphereComp->SetCollisionObjectType(ECC_WorldDynamic);
-	SphereComp->SetCollisionResponseToAllChannels(ECR_Ignore);
-	SphereComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-	*/
-	SphereComp->SetCollisionProfileName("Projectile");
 	SphereComp->SetSphereRadius(20.0f);
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ASMagicProjectile::OnActorOverlap);
-	RootComponent = SphereComp;
-
-	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
-	EffectComp->SetupAttachment(SphereComp);
-
-	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
-	MovementComp->InitialSpeed = 1000.0f;
-	MovementComp->bRotationFollowsVelocity = true;
-	MovementComp->bInitialVelocityInLocalSpace = true;
 
 	Damage = 20.0f;
 }
@@ -38,29 +22,20 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if (OtherActor && OtherActor != GetInstigator())
 	{
-		/*
-		//USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
-		USAttributeComponent* AttributeComp = OtherActor->GetComponentByClass<USAttributeComponent>();
-		if (AttributeComp)
+		//static FGameplayTag Tag = FGameplayTag::RequestGameplayTag("Status.Parrying");
+
+		USActionComponent* ActionComp = Cast<USActionComponent>(OtherActor->GetComponentByClass(USActionComponent::StaticClass()));
+		if (ActionComp && ActionComp->ActiveGameplayTags.HasTag(ParryTag))
 		{
-			AttributeComp->ApplyHealthChange(GetInstigator(), -Damage);
-			UE_LOG(LogTemp, Log, TEXT("Destroy"));
-			Destroy();
-		}*/
+			MoveComp->Velocity = -MoveComp->Velocity;
+
+			SetInstigator(Cast<APawn>(OtherActor));
+			return;
+		}
 
 		if (USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, Damage, SweepResult))
 		{
 			Destroy();
 		}
 	}
-}
-
-void ASMagicProjectile::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void ASMagicProjectile::Tick(const float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }

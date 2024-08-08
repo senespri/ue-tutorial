@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
+#include "SProjectileBase.h"
 #include "GameFramework/Actor.h"
 #include "SMagicProjectile.generated.h"
 
@@ -9,7 +11,7 @@ class UProjectileMovementComponent;
 class UParticleSystemComponent;
 
 UCLASS()
-class UE5TUTORIAL_API ASMagicProjectile : public AActor
+class UE5TUTORIAL_API ASMagicProjectile : public ASProjectileBase
 {
 	GENERATED_BODY()
 
@@ -17,23 +19,13 @@ public:
 	ASMagicProjectile();
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	float Damage = 20;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	FGameplayTag ParryTag;
 
 	UFUNCTION()
 	void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USphereComponent* SphereComp;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UProjectileMovementComponent* MovementComp;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UParticleSystemComponent* EffectComp;
-
-	virtual void BeginPlay() override;
-
-public:
-	virtual void Tick(float DeltaTime) override;
 };
