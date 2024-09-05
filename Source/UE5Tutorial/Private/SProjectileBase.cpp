@@ -31,7 +31,7 @@ void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Oth
 
 void ASProjectileBase::Explode_Implementation()
 {
-	if (ensure(!IsEliminatingGarbage(EGCOptions::EliminateGarbage)))
+	if (ensure(IsEliminatingGarbage(EGCOptions::EliminateGarbage)))
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
 
